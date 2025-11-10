@@ -8,6 +8,8 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 from datetime import timedelta,datetime
 from sqlalchemy import func
+import cloudinary
+import cloudinary.uploader
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -44,6 +46,12 @@ def admin_required(f):
 def init_db():
     with app.app_context():
         db.create_all()
+        try:
+            admin_count=User.query.filter_by(user_type='admin').count()
+        except:
+            # Tables don't exist yet
+            db.create_all()
+            admin_count = 0
         all_admins = User.query.filter_by(user_type='admin').all()
         # Create default admin if not exists
         if len(all_admins) == 0:

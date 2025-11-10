@@ -41,7 +41,7 @@ class Provider(db.Model):
     is_approved = db.Column(db.Boolean, default=False)
     status = db.Column(db.String(20), default='pending')  # pending, approved, rejected
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+    is_active = db.Column(db.Boolean, default=True)
     user = db.relationship('User', backref='provider_profile')
 
 class Service(db.Model):
