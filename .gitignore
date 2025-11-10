@@ -1,0 +1,6 @@
+database/
+__pycache__/
+venv/
+config.py
+static/images/uploads
+.env
