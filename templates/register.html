@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="register-page">
+    <div class="register-container">
+        <h2>Register as Service Provider</h2>
+        <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="service_type">Service Type</label>
+                <select id="service_type" name="service_type" required>
+                    <option value="">Select Service</option>
+                    {% for service in services %}
+                    <option value="{{ service.name }}">{{ service.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="business_name">Business Name</label>
+                <input type="text" id="business_name" name="business_name" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="photo">Profile Photo</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="license">Business License/Certificate (Required)</label>
+                <input type="file" id="license" name="license" accept=".pdf,.jpg,.jpeg,.png" required>
+                <small>Upload your business license, certificate, or relevant document (PDF or Image)</small>
+            </div>
+            <button type="submit" class="btn-submit">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

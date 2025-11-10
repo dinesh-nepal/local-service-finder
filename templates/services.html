@@ -1,0 +1,202 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="services-page">
+    <h1>Our Services</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search services..." class="search-box">
+        <i class="fas fa-search search-icon"></i>
+    </div>
+
+    <div class="services-grid" id="servicesGrid">
+        {% for service in services %}
+        <div class="service-card" data-service="{{ service.name }}">
+            <div class="service-icon">
+                <i class="fas {{ service.icon }} fa-3x"></i>
+            </div>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+            <button class="btn-service" onclick="handleServiceClick('{{ service.name }}')">View Providers</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function handleServiceClick(serviceName) {
+        fetch('/api/check-login')
+            .then(response => response.json())
+            .then(data => {
+                if (data.logged_in) {
+                    window.location.href = `/provider-details/${serviceName}`;
+                } else {
+                    alert('Please login to view providers');
+                    window.location.href = '/login?next=' + encodeURIComponent(`/provider-details/${serviceName}`);
+                }
+            });
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+{% block scripts %}
+<!-- Login Required Modal -->
+<div id="loginModal" class="login-modal-overlay">
+    <div class="login-modal-content">
+        <div class="login-modal-header">
+            <i class="fas fa-lock"></i>
+            <h3>Login Required</h3>
+        </div>
+        <div class="login-modal-body">
+            <p>You need to login to view service providers.</p>
+            <p class="login-modal-subtitle">Please login or create an account to continue.</p>
+        </div>
+        <div class="login-modal-footer">
+            <a href="{{ url_for('login') }}" class="btn-login-modal">Login</a>
+            <a href="{{ url_for('signup') }}" class="btn-signup-modal">Sign Up</a>
+            <button id="cancelLoginModal" class="btn-cancel-modal">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.3s;
+    }
+
+    .login-modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s;
+    }
+
+    .login-modal-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-modal-header i {
+        color: var(--dark-yellow);
+        font-size: 2.5rem;
+    }
+
+    .login-modal-header h3 {
+        color: var(--text-dark);
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .login-modal-body {
+        margin-bottom: 2rem;
+    }
+
+    .login-modal-body p {
+        color: var(--text-dark);
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-modal-subtitle {
+        color: var(--text-light);
+        font-size: 0.95rem !important;
+    }
+
+    .login-modal-footer {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .btn-login-modal,
+    .btn-signup-modal,
+    .btn-cancel-modal {
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+        transition: transform 0.2s;
+       
+    }
+
+    .btn-login-modal {
+        background: var(--primary-yellow);
+        color: var(--text-dark);
+    }
+
+    .btn-signup-modal {
+        background: #4caf50;
+        color: white;
+    }
+
+    .btn-cancel-modal {
+        background: #95a5a6;
+        color: white;
+    }
+
+    .btn-login-modal:hover,
+    .btn-signup-modal:hover,
+    .btn-cancel-modal:hover {
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    const loginModal = document.getElementById('loginModal');
+    const cancelBtn = document.getElementById('cancelLoginModal');
+
+    function handleServiceClick(serviceName) {
+        fetch('/api/check-login')
+            .then(response => response.json())
+            .then(data => {
+                if (data.logged_in) {
+                    window.location.href = `/provider-details/${serviceName}`;
+                } else {
+                    // Show modal instead of alert
+                    loginModal.style.display = 'flex';
+                }
+            });
+    }
+
+    // Cancel button closes modal
+    cancelBtn.addEventListener('click', function () {
+        loginModal.style.display = 'none';
+    });
+
+    // Close on outside click
+    loginModal.addEventListener('click', function (e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+
+    // Close on ESC key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && loginModal.style.display === 'flex') {
+            loginModal.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

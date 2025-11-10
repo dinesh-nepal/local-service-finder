@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Manage Services{% endblock %}
+
+{% block content %}
+<div class="admin-actions">
+    <a href="{{ url_for('add_service') }}" class="btn-add">
+        <i class="fas fa-plus"></i> Add New Service
+    </a>
+</div>
+
+<div class="table-container">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Icon</th>
+                <th>Service Name</th>
+                <th>Description</th>
+                <th>Providers Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.id }}</td>
+                <td><i class="fas {{ service.icon }} fa-2x"></i></td>
+                <td>{{ service.name }}</td>
+                <td>{{ service.description }}</td>
+                <td>{{ service.name | count_providers }}</td>
+                <td class="action-buttons">
+                    <!-- <a href="{{ url_for('edit_service', service_id=service.id) }}" class="btn-action btn-primary"
+                        title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </a> -->
+                    <td class="action-buttons">
+                        <a href="{{ url_for('edit_service', service_id=service.id) }}" class="btn-action btn-primary" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{{ url_for('delete_service', service_id=service.id) }}" class="btn-action btn-danger delete-action"
+                            data-message="Are you sure you want to delete '{{ service.name }}' service?" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

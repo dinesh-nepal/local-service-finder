@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-container">
+        <h2>Sign Up</h2>
+        <form method="POST" action="{{ url_for('signup') }}" onsubmit="return validateSignup()">
+            <div class="form-group">
+                <label for="full_name">Full Name</label>
+                <input type="text" id="full_name" name="full_name" required 
+                onkeypress="return /[a-zA-Z\s]/.test(event.key)">
+                <small>Letters only, no numbers</small>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" required
+                maxlength="10" pattern="[0-9]{10}"
+                onkeypress="return /[0-9]/.test(event.key)">
+                <small>!0 digits only, no letters</small>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="6">
+                <small>Minimum 6 characters, at least 1 uppercase letter and 1 number</small>
+            </div>
+            <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+        <p class="auth-link">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+</div>
+<script>
+    function validateSignup(){
+        const password=document.getElementById('password').value;
+        const phone=document.getElementById('phone').value;
+        const name= document.getElemetById('full_name').value;
+
+        if(password.length<6)
+        {
+            alert('Password must be at least 6 characters long');
+            return false;
+        }
+        if(!/[A-Z]/.test(password)){
+            alert('Password must contain at least one uppercase letter');
+            return false;
+        }
+        if (!/[0-9]/.test(password)) {
+            alert('Password must contain at least one number');
+            return false;
+        }
+        if (phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+            alert('Phone number must be exactly 10 digits');
+            return false;
+        }
+        if (/[0-9]/.test(name)) {
+            alert('Name cannot contain numbers');
+            return false;
+        }
+
+        return true;
+    
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="edit-provider-page">
+    <h1>Edit Provider Profile</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="provider-form">
+        <div class="form-section">
+            <h2>Business Information</h2>
+
+            <div class="form-group">
+                <label for="business_name">Business Name</label>
+                <input type="text" id="business_name" name="business_name" value="{{ provider.business_name }}"
+                    required>
+            </div>
+
+            <!-- <div class="form-group">
+                <label for="service_type_display">Service Type</label>
+                 <select id="service_type" name="service_type" disabled> 
+                     {% for service in services %} 
+                     <option value="{{ service.name }}" {% if service.name==provider.service_type %}selected{% endif %}>
+                        {{ service.name }}
+                    </option> 
+                    <input type="text" id="service_type_display" value="{{ provider.service_type }}" class="form-control" disabled>
+                    <small>Contact admin to change service type</small>
+                     {% endfor %}
+                 </select> 
+               
+            </div> -->
+            <div class="form-group">
+                <label for="service_type_display">Service Type</label>
+            
+                <!-- This input will only be rendered once, showing the provider's service type -->
+                <input type="text" id="service_type_display" value="{{ provider.service_type }}" class="form-control" disabled>
+            
+                <small class="text-muted">Contact admin to change service type</small>
+            </div>
+
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" value="{{ provider.location }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" required>{{ provider.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Profile Photo</label>
+                {% if provider.photo %}
+                <img src="{{ url_for('static', filename='images/uploads/' + provider.photo) }}" alt="Current photo"
+                    class="current-photo">
+                {% endif %}
+                <input type="file" id="photo" name="photo" accept="image/*">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>License & Documents</h2>
+            {% if provider.license_document %}
+            <div class="current-file">
+                <i class="fas fa-file-alt fa-3x"></i>
+                <div>
+                    <p><strong>Current License:</strong></p>
+                    <a href="{{ url_for('static', filename='images/uploads/' + provider.license_document) }}" target="_blank"
+                        class="btn-view-doc">
+                        <i class="fas fa-eye"></i> View License
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="license">Upload New License (Optional)</label>
+                <input type="file" id="license" name="license" accept=".pdf,.jpg,.jpeg,.png">
+                <small>Upload to replace existing license</small>
+            </div>
+            </div>
+
+            <!-- {% if provider.licenses %}
+            <div class="license-list">
+                <h3>Uploaded Licenses:</h3>
+                {% for license in provider.licenses %}
+                <div class="license-item">
+                    <div>
+                        <i class="fas fa-file-alt"></i>
+                        <strong>{{ license.license_type }}</strong>
+                        <a href="{{ url_for('static', filename='images/uploads/' + license.license_file) }}"
+                            target="_blank">View</a>
+                    </div>
+                    <a href="{{ url_for('delete_license', license_id=license.id) }}" class="btn-delete-small"
+                        onclick="return confirm('Delete this license?')">Delete</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="license_type">License Type</label>
+                <input type="text" id="license_type" name="license_type"
+                    placeholder="e.g., Business License, Certification">
+            </div>
+
+            <div class="form-group">
+                <label for="license">Upload New License (PDF, Image)</label>
+                <input type="file" id="license" name="license" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+        </div> -->
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Save Changes</button>
+            <a href="{{ url_for('provider_dashboard') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .edit-provider-page {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .provider-form {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 15px;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .form-section h2 {
+        margin-bottom: 1.5rem;
+        color: var(--text-dark);
+    }
+
+    .current-photo {
+        display: block;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .license-list {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .license-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .license-item:last-child {
+        border-bottom: none;
+    }
+
+    .license-item a {
+        color: var(--dark-yellow);
+        margin-left: 1rem;
+    }
+
+    .btn-delete-small {
+        background: #f44336;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-submit {
+        background: var(--primary-yellow);
+        color: var(--text-dark);
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-cancel {
+        background: #95a5a6;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Find Local Services Near You</h1>
+        <p class="hero-subtitle">Connect with trusted professionals in your area</p>
+        <a href="{{ url_for('services') }}" class="btn-hero">Browse Services</a>
+    </div>
+</div>
+
+<div class="features-section">
+    <h2>Why Choose Us?</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <i class="fas fa-users fa-3x"></i>
+            <h3>Verified Professionals</h3>
+            <p>All service providers are verified and rated by customers</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-clock fa-3x"></i>
+            <h3>Quick Response</h3>
+            <p>Get connected with professionals in minutes</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-star fa-3x"></i>
+            <h3>Quality Service</h3>
+            <p>Top-rated service providers with excellent reviews</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-shield-alt fa-3x"></i>
+            <h3>Secure Platform</h3>
+            <p>Your data and privacy are protected</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

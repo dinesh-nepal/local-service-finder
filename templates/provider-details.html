@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="provider-page">
+    <h1>{{ service_name }}</h1>
+
+    {% if providers %}
+    <div class="providers-grid">
+        {% for provider in providers %}
+        <div class="provider-card">
+            <div class="provider-photo">
+                {% if provider.photo %}
+                <img src="{{ url_for('static', filename='images/uploads/' + provider.photo) }}"
+                    alt="{{ provider.business_name }}">
+                {% else %}
+                <i class="fas fa-user-circle fa-5x"></i>
+                {% endif %}
+            </div>
+
+            <div class="provider-info">
+                <h3>{{ provider.business_name or provider.user.full_name }}</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <span>{{ provider.rating }}</span>
+                    <span class="reviews">({{ provider.reviews_count }} reviews)</span>
+                </div>
+                <p class="description">{{ provider.description }}</p>
+                <p class="location"><i class="fas fa-map-marker-alt"></i> {{ provider.location }}</p>
+                <p class="contact"><i class="fas fa-phone"></i> {{ provider.user.phone }}</p>
+
+                {% if current_user.is_authenticated and current_user.user_type != 'provider' %}
+                <div class="rating-section">
+                    <h4 class="rating-label">Rate this provider:</h4>
+                    <form method="POST" action="{{ url_for('rate_provider', provider_id=provider.id) }}"
+                        class="rating-form">
+                        <div class="star-rating">
+                            {% for i in range(5, 0, -1) %}
+                            <input type="radio" id="star{{ i }}-{{ provider.id }}" name="rating" value="{{ i }}" {% if
+                                user_ratings.get(provider.id)==i %}checked{% endif %}>
+                            <label for="star{{ i }}-{{ provider.id }}" title="{{ i }} stars">★</label>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn-rate">Rate</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                <a href="mailto:{{ provider.user.email }}?subject=Inquiry%20about%20your%20services&body=Hello%20{{ provider.business_name }},%0D%0AI%20am%20interested%20in%20your%20services."
+                    class="btn-contact">
+                    <i class="fas fa-envelope"></i> Contact Provider
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-providers">
+        <i class="fas fa-info-circle fa-3x"></i>
+        <p>No providers available for this service yet.</p>
+        <a href="{{ url_for('register') }}" class="btn-register">Become a Provider</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

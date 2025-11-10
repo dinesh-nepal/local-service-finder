@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-users fa-2x"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-briefcase fa-2x"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_providers }}</h3>
+            <p>Total Providers</p>
+        </div>
+    </div>
+    <div class="stat-card pending">
+        <div class="stat-icon">
+            <i class="fas fa-clock fa-2x"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ pending_providers }}</h3>
+            <p>Pending Approvals</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-concierge-bell fa-2x"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_services }}</h3>
+            <p>Total Services</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-sections">
+    <div class="dashboard-section">
+        <h2>Recent Provider Registrations</h2>
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Business Name</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for provider in recent_providers %}
+                    <tr>
+                        <td>{{ provider.business_name }}</td>
+                        <td>{{ provider.service_type }}</td>
+                        <td>
+                            <span class="badge badge-{{ provider.status }}">{{ provider.status }}</span>
+                        </td>
+                        <td>{{ provider.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if provider.status == 'pending' %}
+                            <a href="{{ url_for('approve_provider', provider_id=provider.id) }}"
+                                class="btn-action btn-success">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            <a href="{{ url_for('reject_provider', provider_id=provider.id) }}"
+                                class="btn-action btn-danger">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{{ url_for('admin_providers') }}" class="btn-view-all">View All Providers</a>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>Recent Messages</h2>
+        <div class="message-list">
+            {% for message in recent_messages %}
+            <div class="message-item">
+                <div class="message-header">
+                    <strong>{{ message.name }}</strong>
+                    <span class="message-date">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+                <div class="message-subject">{{ message.subject }}</div>
+                <div class="message-preview">{{ message.message[:100] }}...</div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('admin_messages') }}" class="btn-view-all">View All Messages</a>
+    </div>
+</div>
+{% endblock %}

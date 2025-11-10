@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - LSF{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-body">
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-user-shield"></i>
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="admin-nav">
+                <a href="{{ url_for('admin_dashboard') }}"
+                    class="admin-nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="{{ url_for('admin_providers') }}"
+                    class="admin-nav-link {% if 'provider' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-users"></i> Providers
+                </a>
+                <a href="{{ url_for('admin_users') }}"
+                    class="admin-nav-link {% if 'user' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-user"></i> Users
+                </a>
+                <a href="{{ url_for('admin_services') }}"
+                    class="admin-nav-link {% if 'service' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-concierge-bell"></i> Services
+                </a>
+                <a href="{{ url_for('admin_messages') }}"
+                    class="admin-nav-link {% if 'message' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+                <a href="{{ url_for('admin_settings') }}"
+                    class="admin-nav-link {% if 'settings' in request.endpoint %}active{% endif %}">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+                <a href="{{ url_for('index') }}" class="admin-nav-link">
+                    <i class="fas fa-home"></i> Back to Site
+                </a>
+                <a href="{{ url_for('logout') }}" class="admin-nav-link logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <header class="admin-header">
+                <h1>{% block page_title %}Admin Dashboard{% endblock %}</h1>
+                <div class="admin-user-info">
+                    <span>Welcome, {{ current_user.full_name }}</span>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <main class="admin-content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

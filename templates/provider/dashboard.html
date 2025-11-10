@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="provider-dashboard">
+    <h1>Provider Dashboard</h1>
+
+    <div class="dashboard-header">
+        <div class="provider-status">
+            <span class="badge badge-{{ provider.status }}">Your are {{ provider.status }} by admin.</span>
+            {% if provider.status == 'pending' %}
+            <p>Your profile is under review by admin.</p>
+            {% elif provider.status == 'rejected' %}
+            <p>Your profile was rejected. Please contact admin.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dashboard-stats">
+        <div class="stat-box">
+            <i class="fas fa-star fa-2x"></i>
+            <h3>{{ provider.rating }}</h3>
+            <p>Average Rating</p>
+        </div>
+        <div class="stat-box">
+            <i class="fas fa-comments fa-2x"></i>
+            <h3>{{ total_ratings }}</h3>
+            <p>Total Reviews</p>
+        </div>
+        <div class="stat-box">
+            <i class="fas fa-briefcase fa-2x"></i>
+            <h3>{{ provider.service_type }}</h3>
+            <p>Service Category</p>
+        </div>
+    </div>
+
+    <div class="dashboard-actions">
+        <a href="{{ url_for('edit_provider_profile') }}" class="btn-dashboard">
+            <i class="fas fa-edit"></i> Edit Profile
+        </a>
+        <a href="{{ url_for('change_password') }}" class="btn-dashboard">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+    </div>
+
+    <div class="recent-reviews">
+        <h2>Recent Reviews</h2>
+        {% if recent_ratings %}
+        <div class="reviews-list">
+            {% for rating in recent_ratings %}
+            <div class="review-card">
+                <div class="review-header">
+                    <strong>{{ rating.user.full_name }}</strong>
+                    <span class="rating-stars">
+                        {% for i in range(rating.rating) %}⭐{% endfor %}
+                    </span>
+                </div>
+                <p>{{ rating.review }}</p>
+                <span class="review-date">{{ rating.created_at.strftime('%Y-%m-%d') }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No reviews yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .provider-dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        background: rgba(255, 255, 255, 0.4);
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .stat-box i {
+        color: var(--dark-yellow);
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-actions {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-dashboard {
+        background: var(--primary-yellow);
+        color: var(--text-dark);
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .recent-reviews {
+        background: rgba(255, 255, 255, 0.4);
+        padding: 2rem;
+        border-radius: 15px;
+    }
+
+    .reviews-list {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .review-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .rating-stars {
+        color: var(--primary-yellow);
+    }
+
+    .review-date {
+        color: var(--text-light);
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}
