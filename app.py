@@ -8,10 +8,8 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 from datetime import timedelta,datetime
 from sqlalchemy import func
-import cloudinary
-import cloudinary.uploader
-from dotenv import load_dotenv
-load_dotenv()
+
+
 
 
 app = Flask(__name__)
@@ -46,12 +44,12 @@ def admin_required(f):
 def init_db():
     with app.app_context():
         db.create_all()
-        try:
-            admin_count=User.query.filter_by(user_type='admin').count()
-        except:
-            # Tables don't exist yet
-            db.create_all()
-            admin_count = 0
+        # try:
+        #     admin_count=User.query.filter_by(user_type='admin').count()
+        # except:
+        #     # Tables don't exist yet
+        #     db.create_all()
+        #     admin_count = 0
         all_admins = User.query.filter_by(user_type='admin').all()
         # Create default admin if not exists
         if len(all_admins) == 0:
@@ -777,6 +775,6 @@ def delete_message(message_id):
 
 if __name__ == '__main__':
     init_db()
-    port=int(os.environ.get('PORT',5000))
-    debug=os.environ.get('FLASK_ENV')!='production'
-    app.run(debug=debug, port=port,host='0.0.0.0')
+    # port=int(os.environ.get('PORT',5000))
+    # debug=os.environ.get('FLASK_ENV')!='production'
+    app.run(debug=True, port=5000,)
