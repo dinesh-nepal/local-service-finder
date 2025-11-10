@@ -4,3 +4,4 @@ venv/
 config.py
 static/images/uploads
 .env
+*.pyc
